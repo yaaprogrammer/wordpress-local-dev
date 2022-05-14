@@ -1,0 +1,8 @@
+/wp-content/uploads/
+/wp-content/cache/supercache/
+*.log
+/.htaccess
+/.htaccess.bk
+/.user.ini*
+/.user.ini
+/wp-config.php

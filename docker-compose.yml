@@ -1,0 +1,37 @@
+version: "3.8"
+services:
+  web:
+    container_name: nginx_web_container
+    build: ./docker/nginx
+    restart: always
+    ports:
+      - "443:443"
+    volumes:
+      - "./config/nginx:/etc/nginx"
+      - "./log/nginx:/var/log/nginx"
+      - "./www:/www/wwwroot/example.com"
+  cgi:
+    container_name: php_cgi_container
+    build: ./docker/php
+    expose:
+      - "9000"
+    volumes:
+      - "./config/php:/usr/local/etc"
+      - "./log/php:/usr/local/var/log"
+      - "./www:/www/wwwroot/example.com"
+    cap_add:
+      # 解决慢日志无权限问题，启用SYS_PTRACE
+      - SYS_PTRACE
+  db:
+    container_name: mysql_db_container
+    image: mysql:5.7-oracle
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=admin
+      - MYSQL_DATABASE=wordpress
+    volumes:
+      - "./config/mysql:/etc/mysql/conf.d"
+      - "./log/mysql:/var/log"
+      - "./sql:/docker-entrypoint-initdb.d"
